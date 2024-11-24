@@ -1,8 +1,10 @@
-const express = require("express");
-require("dotenv").config();
-require("./db");
-const bodyParser = require("body-parser");
-const postRouter = require("./routes/postRoutes");
+import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
+import "./db";
+import bodyParser from "body-parser";
+import postRouter from "./routes/postRoutes";
+
 const PORT = process.env.PORT || 3000;
 
 const app = express();

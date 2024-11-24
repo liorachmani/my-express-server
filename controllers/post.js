@@ -1,5 +1,4 @@
-const Post = require("../models/post");
-
+import Post from "../models/post";
 /**
  * Create a new post - POST /post
  * @param {object} req - Express request object
@@ -80,9 +79,4 @@ const updatePost = async (req, res) => {
   }
 };
 
-module.exports = {
-  createPost,
-  getPosts,
-  getPostById,
-  updatePost,
-};
+export { createPost, getPosts, getPostById, updatePost };
