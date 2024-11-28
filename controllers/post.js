@@ -79,4 +79,4 @@ const updatePost = async (req, res) => {
   }
 };
 
-export { createPost, getPosts, getPostById, updatePost };
+export const PostController = { createPost, getPosts, getPostById, updatePost };
