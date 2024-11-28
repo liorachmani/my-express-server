@@ -1,2 +1,25 @@
+# Post
 ###
-GET http://localhost:3000
+POST http://localhost:3000/post
+Content-Type: application/json
+
+{
+    "title": "Title",
+    "content": "Content",
+    "sender_id": "1"
+}
+###
+GET http://localhost:3000/post
+###
+GET http://localhost:3000/post?sender=1
+###
+GET http://localhost:3000/post/6741a07761c9d48c34165a0d
+###
+PUT http://localhost:3000/post/6741a07761c9d48c34165a0d
+Content-Type: application/json
+
+{
+    "title": "Updated title",
+    "content": "Updated content",
+    "sender_id": "1"
+}
