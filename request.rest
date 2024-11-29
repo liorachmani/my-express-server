@@ -23,3 +23,31 @@ Content-Type: application/json
     "content": "Updated content",
     "sender_id": "1"
 }
+
+# Comment
+###
+POST http://localhost:3000/comment
+Content-Type: application/json
+
+{
+    "message": "hi this is a message 2",
+    "sender_id": "1",
+    "post_id": "67474a3d2651e79673ab702f"
+}
+###
+GET http://localhost:3000/comment
+###
+GET http://localhost:3000/comment?postId=67474a3d2651e79673ab702f
+###
+GET http://localhost:3000/comment/6749cb55afbf646b4890dc07
+###
+PUT http://localhost:3000/comment/6749cb55afbf646b4890dc07
+Content-Type: application/json
+
+{
+    "message": "updated messageeeeeee",
+    "sender_id": "2",
+    "post_id": "67474a3d2651e79673ab702f"
+}
+###
+DELETE http://localhost:3000/comment/6749cb9bafbf646b4890dc0e
