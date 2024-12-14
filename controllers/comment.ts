@@ -1,11 +1,12 @@
+import { Request, Response } from "express";
 import Comment from "../models/comment";
 
 /**
  * Create a new comment - POST /comment
- * @param {object} req - Express request object
- * @param {object} res - Express response object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
  */
-const createComment = async (req, res) => {
+const createComment = async (req: Request, res: Response): Promise<void> => {
   try {
     const comment = req.body;
     const newComment = new Comment(comment);
@@ -22,12 +23,12 @@ const createComment = async (req, res) => {
 
 /**
  * Get all comments - GET /comment
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {array} - Array of comment objects
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>} - Array of comment objects
  */
-const getComments = async (req, res) => {
-  const postId = req.query.postId;
+const getComments = async (req: Request, res: Response): Promise<void> => {
+  const postId = req.query.postId as string;
 
   try {
     let comments;
@@ -45,11 +46,11 @@ const getComments = async (req, res) => {
 
 /**
  * Get a comment by ID - GET /comment/:id
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} - comment object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>} - comment object
  */
-const getCommentById = async (req, res) => {
+const getCommentById = async (req: Request, res: Response): Promise<void> => {
   const id = req.params.id;
 
   try {
@@ -62,11 +63,11 @@ const getCommentById = async (req, res) => {
 
 /**
  * Update a comment - PUT /comment/:id
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} - Updated comment object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>} - Updated comment object
  */
-const updateComment = async (req, res) => {
+const updateComment = async (req: Request, res: Response): Promise<void> => {
   const commentId = req.params.id;
 
   try {
@@ -86,11 +87,11 @@ const updateComment = async (req, res) => {
 
 /**
  * delete a comment - DELETE /comment/:id
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} - deleted comment
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>} - deleted comment
  */
-const deleteComment = async (req, res) => {
+const deleteComment = async (req: Request, res: Response): Promise<void> => {
   const commentId = req.params.id;
 
   try {

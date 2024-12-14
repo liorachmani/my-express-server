@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    // "baseUrl": "./src", // Base directory to resolve non-absolute module names
+    "baseUrl": ".", // Base directory to resolve non-absolute module names
     "typeRoots": ["./node_modules/@types", "index.d.ts"], // Specify type declaration files to be included in compilation
     "target": "es5", // Specify ECMAScript target version
     "module": "ESNext", // Specify module code generation
@@ -22,9 +22,10 @@
     "noImplicitThis": true, // Raise error on 'this' expressions with an implied 'any' type
     "alwaysStrict": true, // Parse in strict mode and emit "use strict" for each source file
     "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules
+    "moduleResolution": "node", // Specify module resolution strategy
     "skipLibCheck": true, // Skip type checking of declaration files
     "forceConsistentCasingInFileNames": true // Disallow inconsistently-cased references to the same file
   },
-  "include": ["./src/**/*"], // Include all files in the src directory
+  // "include": ["./src/**/*"], // Include all files in the src directory
   "exclude": ["node_modules"] // Exclude node_modules and test files
 }

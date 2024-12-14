@@ -16,6 +16,6 @@ app.use(bodyParser.json());
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
