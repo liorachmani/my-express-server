@@ -24,7 +24,11 @@ describe("PostController", () => {
   it("should create a new post", async () => {
     const res = await request(app)
       .post("/post")
-      .send({ title: "Test Post", content: "This is a test post" });
+      .send({
+        title: "Test Post",
+        content: "This is a test post",
+        sender_id: "12345",
+      });
 
     expect(res.status).toBe(200);
     expect(res.body.message).toMatch(/Post .* created successfully/);
@@ -34,6 +38,7 @@ describe("PostController", () => {
     const post = new Post({
       title: "Test Post",
       content: "This is a test post",
+      sender_id: "12345",
     });
     await post.save();
 
@@ -48,6 +53,7 @@ describe("PostController", () => {
     const post = new Post({
       title: "Test Post",
       content: "This is a test post",
+      sender_id: "12345",
     });
     await post.save();
 
@@ -61,15 +67,34 @@ describe("PostController", () => {
     const post = new Post({
       title: "Test Post",
       content: "This is a test post",
+      sender_id: "12345",
     });
     await post.save();
 
     const res = await request(app)
       .put(`/post/${post._id}`)
-      .send({ title: "Updated Post", content: "This is an updated test post" });
+      .send({
+        title: "Updated Post",
+        content: "This is an updated test post",
+        sender_id: "12345",
+      });
 
     expect(res.status).toBe(200);
     expect(res.body.title).toBe("Updated Post");
+  });
+
+  it("should delete a post", async () => {
+    const post = new Post({
+      title: "Test Post",
+      content: "This is a test post",
+      sender_id: "12345",
+    });
+    await post.save();
+
+    const res = await request(app).delete(`/post/${post._id}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBe("Post deleted successfully");
   });
 
   it("should handle errors when creating a post", async () => {
@@ -79,7 +104,11 @@ describe("PostController", () => {
 
     const res = await request(app)
       .post("/post")
-      .send({ title: "Test Post", content: "This is a test post" });
+      .send({
+        title: "Test Post",
+        content: "This is a test post",
+        sender_id: "12345",
+      });
 
     expect(res.status).toBe(500);
     expect(res.body.message).toBe("Database error");
@@ -114,7 +143,22 @@ describe("PostController", () => {
 
     const res = await request(app)
       .put("/post/invalid-id")
-      .send({ title: "Updated Post", content: "This is an updated test post" });
+      .send({
+        title: "Updated Post",
+        content: "This is an updated test post",
+        sender_id: "12345",
+      });
+
+    expect(res.status).toBe(500);
+    expect(res.body.message).toBe("Database error");
+  });
+
+  it("should handle errors when deleting a post", async () => {
+    jest.spyOn(Post, "findByIdAndDelete").mockImplementationOnce(() => {
+      throw new Error("Database error");
+    });
+
+    const res = await request(app).delete("/post/invalid-id");
 
     expect(res.status).toBe(500);
     expect(res.body.message).toBe("Database error");
