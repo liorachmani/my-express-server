@@ -15,11 +15,10 @@ const promiseApp = new Promise<Express>(async (resolve, reject) => {
 
     app.use("/post", postRouter);
     app.use("/comment", commentRouter);
-    app.use("/auth", authRouter);
-
     resolve(app);
   } catch (error) {
     console.error(error);
+    reject(error);
   }
 });
 

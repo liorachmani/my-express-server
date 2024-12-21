@@ -1,10 +1,12 @@
+import { Request, Response } from "express";
 import Post from "../models/post";
+
 /**
  * Create a new post - POST /post
- * @param {object} req - Express request object
- * @param {object} res - Express response object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
  */
-const createPost = async (req, res) => {
+const createPost = async (req: Request, res: Response) => {
   try {
     const post = req.body;
     const newPost = new Post(post);
@@ -21,15 +23,14 @@ const createPost = async (req, res) => {
 
 /**
  * Get all posts - GET /post
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {array} - Array of post objects
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
  */
-const getPosts = async (req, res) => {
-  const senderId = req.query.sender;
+const getPosts = async (req: Request, res: Response) => {
+  const senderId = req.query.sender as string;
 
   try {
-    let posts;
+    let posts: (typeof Post)[];
     if (senderId) {
       posts = await Post.find({ sender_id: senderId });
     } else {
@@ -38,34 +39,36 @@ const getPosts = async (req, res) => {
 
     res.status(200).json(posts);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
 /**
  * Get a post by ID - GET /post/:id
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} - Post object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
  */
-const getPostById = async (req, res) => {
+const getPostById = async (req: Request, res: Response) => {
   const id = req.params.id;
 
   try {
     const post = await Post.findById(id);
     res.status(200).json(post);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
 /**
  * Update a post - PUT /post/:id
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} - Updated post object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
  */
-const updatePost = async (req, res) => {
+const updatePost = async (req: Request, res: Response) => {
   const postId = req.params.id;
 
   try {
@@ -75,7 +78,9 @@ const updatePost = async (req, res) => {
     });
     res.status(200).json(updatedPost);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
