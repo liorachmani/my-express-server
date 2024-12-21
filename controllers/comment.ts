@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
-import Comment from "../models/comment";
+import Comment, { IComment } from "../models/comment";
 
 /**
  * Create a new comment - POST /comment
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  */
-const createComment = async (req: Request, res: Response): Promise<void> => {
+const createComment = async (
+  req: Request<{}, {}, IComment>,
+  res: Response
+): Promise<void> => {
   try {
     const comment = req.body;
     const newComment = new Comment(comment);
@@ -31,7 +34,7 @@ const getComments = async (req: Request, res: Response): Promise<void> => {
   const postId = req.query.postId as string;
 
   try {
-    let comments;
+    let comments: IComment[];
     if (postId) {
       comments = await Comment.find({ post_id: postId });
     } else {
@@ -40,9 +43,7 @@ const getComments = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json(comments);
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: err.message });
-    }
+    res.status(500).json(err);
   }
 };
 
@@ -59,9 +60,7 @@ const getCommentById = async (req: Request, res: Response): Promise<void> => {
     const comment = await Comment.findById(id);
     res.status(200).json(comment);
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: err.message });
-    }
+    res.status(500).json(err);
   }
 };
 
@@ -85,9 +84,7 @@ const updateComment = async (req: Request, res: Response): Promise<void> => {
     );
     res.status(200).json(updatedComment);
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: err.message });
-    }
+    res.status(500).json(err);
   }
 };
 
@@ -104,9 +101,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
     const deletedComment = await Comment.findByIdAndDelete(commentId);
     res.status(200).json(deletedComment);
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: err.message });
-    }
+    res.status(500).json(err);
   }
 };
 

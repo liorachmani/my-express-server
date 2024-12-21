@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import Post from "../models/post";
+import Post, { IPost } from "../models/post";
 
 /**
  * Create a new post - POST /post
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  */
-const createPost = async (req: Request, res: Response) => {
+const createPost = async (req: Request<{}, {}, IPost>, res: Response) => {
   try {
     const post = req.body;
     const newPost = new Post(post);
@@ -28,9 +28,9 @@ const createPost = async (req: Request, res: Response) => {
  */
 const getPosts = async (req: Request, res: Response) => {
   const senderId = req.query.sender as string;
-
+  Post;
   try {
-    let posts: (typeof Post)[];
+    let posts: IPost[];
     if (senderId) {
       posts = await Post.find({ sender_id: senderId });
     } else {
@@ -39,9 +39,7 @@ const getPosts = async (req: Request, res: Response) => {
 
     res.status(200).json(posts);
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: err.message });
-    }
+    res.status(500).json(err);
   }
 };
 
@@ -57,9 +55,7 @@ const getPostById = async (req: Request, res: Response) => {
     const post = await Post.findById(id);
     res.status(200).json(post);
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: err.message });
-    }
+    res.status(500).json(err);
   }
 };
 
@@ -78,9 +74,7 @@ const updatePost = async (req: Request, res: Response) => {
     });
     res.status(200).json(updatedPost);
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: err.message });
-    }
+    res.status(500).json(err);
   }
 };
 
