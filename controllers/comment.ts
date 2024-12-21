@@ -40,7 +40,9 @@ const getComments = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json(comments);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
@@ -57,7 +59,9 @@ const getCommentById = async (req: Request, res: Response): Promise<void> => {
     const comment = await Comment.findById(id);
     res.status(200).json(comment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
@@ -81,7 +85,9 @@ const updateComment = async (req: Request, res: Response): Promise<void> => {
     );
     res.status(200).json(updatedComment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
@@ -98,7 +104,9 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
     const deletedComment = await Comment.findByIdAndDelete(commentId);
     res.status(200).json(deletedComment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 

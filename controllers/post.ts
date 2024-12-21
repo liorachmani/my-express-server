@@ -42,7 +42,9 @@ const getPosts = async (req: Request, res: Response) => {
 
     res.status(200).json(posts);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
@@ -58,7 +60,9 @@ const getPostById = async (req: Request, res: Response) => {
     const post = await Post.findById(id);
     res.status(200).json(post);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
@@ -77,7 +81,9 @@ const updatePost = async (req: Request, res: Response) => {
     });
     res.status(200).json(updatedPost);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 
