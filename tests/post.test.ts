@@ -3,18 +3,18 @@ import mongoose from "mongoose";
 import * as core from "express-serve-static-core";
 import Post from "../models/post";
 import promiseApp from "../server";
+import initApp from "../server";
 
 describe("PostController", () => {
   let app: core.Express;
   beforeAll(async () => {
-    app = await promiseApp;
-    // Connect to the test database
-    await mongoose.connect("mongodb://localhost:27017/testdb");
+    app = await initApp();
   });
-  afterEach(async () => {
-    // Clean up the database after each test
-    await Post.deleteMany({});
-  });
+  // afterEach(async () => {
+  //   // Clean up the database after each test
+  //   await Post.deleteMany({});
+  //   await mongoose.disconnect()
+  // });
 
   afterAll(async () => {
     // Disconnect from the test database
