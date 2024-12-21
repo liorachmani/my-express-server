@@ -1,5 +1,11 @@
 import mongoose from "mongoose";
 
+export interface IComment {
+  message: string;
+  sender_id: string;
+  post_id: string;
+}
+
 const commentSchema = new mongoose.Schema({
   message: {
     type: String,
@@ -16,4 +22,7 @@ const commentSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Comment", commentSchema);
+export default mongoose.model<IComment & mongoose.Document>(
+  "Comment",
+  commentSchema
+);
