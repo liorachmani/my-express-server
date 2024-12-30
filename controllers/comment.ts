@@ -1,11 +1,15 @@
-import Comment from "../models/comment";
+import { Request, Response } from "express";
+import Comment, { IComment } from "../models/comment";
 
 /**
  * Create a new comment - POST /comment
- * @param {object} req - Express request object
- * @param {object} res - Express response object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
  */
-const createComment = async (req, res) => {
+const createComment = async (
+  req: Request<{}, {}, IComment>,
+  res: Response
+): Promise<void> => {
   try {
     const comment = req.body;
     const newComment = new Comment(comment);
@@ -22,15 +26,15 @@ const createComment = async (req, res) => {
 
 /**
  * Get all comments - GET /comment
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {array} - Array of comment objects
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>} - Array of comment objects
  */
-const getComments = async (req, res) => {
-  const postId = req.query.postId;
+const getComments = async (req: Request, res: Response): Promise<void> => {
+  const postId = req.query.postId as string;
 
   try {
-    let comments;
+    let comments: IComment[];
     if (postId) {
       comments = await Comment.find({ post_id: postId });
     } else {
@@ -39,34 +43,34 @@ const getComments = async (req, res) => {
 
     res.status(200).json(comments);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json(err);
   }
 };
 
 /**
  * Get a comment by ID - GET /comment/:id
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} - comment object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>} - comment object
  */
-const getCommentById = async (req, res) => {
+const getCommentById = async (req: Request, res: Response): Promise<void> => {
   const id = req.params.id;
 
   try {
     const comment = await Comment.findById(id);
     res.status(200).json(comment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json(err);
   }
 };
 
 /**
  * Update a comment - PUT /comment/:id
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} - Updated comment object
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>} - Updated comment object
  */
-const updateComment = async (req, res) => {
+const updateComment = async (req: Request, res: Response): Promise<void> => {
   const commentId = req.params.id;
 
   try {
@@ -80,24 +84,24 @@ const updateComment = async (req, res) => {
     );
     res.status(200).json(updatedComment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json(err);
   }
 };
 
 /**
  * delete a comment - DELETE /comment/:id
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @returns {object} - deleted comment
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {Promise<void>} - deleted comment
  */
-const deleteComment = async (req, res) => {
+const deleteComment = async (req: Request, res: Response): Promise<void> => {
   const commentId = req.params.id;
 
   try {
     const deletedComment = await Comment.findByIdAndDelete(commentId);
     res.status(200).json(deletedComment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json(err);
   }
 };
 
