@@ -5,6 +5,7 @@ import "./db";
 import bodyParser from "body-parser";
 import postRouter from "./routes/postRoutes";
 import commentRouter from "./routes/commentRoutes";
+import userRouter from "./routes/userRoutes"
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
+app.use("/user", userRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
