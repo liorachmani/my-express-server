@@ -4,14 +4,18 @@ import { Express } from "express-serve-static-core";
 import bodyParser from "body-parser";
 import postRouter from "./routes/postRoutes";
 import commentRouter from "./routes/commentRoutes";
+import userRouter from "./routes/userRoutes";
 import mongoose from "mongoose";
 dotenv.config();
+
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true, limit: "1mb" }));
 app.use(bodyParser.json());
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
+app.use("/user", userRouter);
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
