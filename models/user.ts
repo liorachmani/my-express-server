@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 export interface IUser {
   email: string;
@@ -32,4 +32,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model<IUser & mongoose.Document>("User", userSchema);
+export default mongoose.model<IUser & mongoose.Document<Types.ObjectId>>(
+  "User",
+  userSchema
+);

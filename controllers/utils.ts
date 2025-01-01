@@ -3,12 +3,32 @@ import { Types } from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const createToken = (id: Types.ObjectId) => {
-  if (!process.env.SERVER_ACCESS_TOKEN_SECRET) {
+export const enum TOKEN_TYPE {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+}
+
+const tokens = [
+  {
+    secret: process.env.SERVER_ACCESS_TOKEN_SECRET,
+    expiration: process.env.SERVER_ACCESS_TOKEN_EXPIRATION,
+  },
+  {
+    secret: process.env.SERVER_REFRESH_TOKEN_SECRET,
+    expiration: process.env.SERVER_REFRESH_TOKEN_EXPIRATION,
+  },
+];
+
+export const createToken = (id: Types.ObjectId, type: TOKEN_TYPE) => {
+  const { secret, expiration } = tokens[type];
+  if (!secret) {
     console.log("Access token secret is not defined");
     return;
   }
-  return jwt.sign({ id }, process.env.SERVER_ACCESS_TOKEN_SECRET, {
-    expiresIn: process.env.JWT_TOKEN_EXPIRATION,
+
+  // Add timestamp to the sign to make the token unique
+  const timestamp = Date.now();
+  return jwt.sign({ id, timestamp }, secret, {
+    expiresIn: expiration,
   });
 };

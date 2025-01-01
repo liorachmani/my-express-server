@@ -1,7 +1,9 @@
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response } from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
-import { createToken } from "./utils";
+import { TOKEN_TYPE, createToken } from "./utils";
+import { Types } from "mongoose";
 
 const register = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -31,9 +33,12 @@ const register = async (req: Request, res: Response): Promise<void> => {
     });
 
     const user = await newUser.save();
-    const token = createToken(user._id);
+    const accessToken = createToken(user._id, TOKEN_TYPE.ACCESS_TOKEN);
+    const refreshToken = createToken(user._id, TOKEN_TYPE.REFRESH_TOKEN);
+    user.refreshTokens = [refreshToken as string];
+    await user.save();
 
-    res.cookie("token", token, {
+    res.cookie("accessToken", accessToken, {
       path: "/",
       expires: new Date(Date.now() + 86400000),
       secure: true,
@@ -66,18 +71,30 @@ const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const token = createToken(user._id);
+    const accessToken = createToken(user._id, TOKEN_TYPE.ACCESS_TOKEN);
+    const refreshToken = createToken(user._id, TOKEN_TYPE.REFRESH_TOKEN);
 
-    res.cookie("token", token, {
-      domain: process.env.frontend_url,
+    if (!accessToken || !refreshToken) {
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+
+    if (!user.refreshTokens) {
+      user.refreshTokens = [];
+    }
+    user.refreshTokens.push(refreshToken);
+    await user.save();
+
+    res.cookie("accessToken", accessToken, {
+      // domain: process.env.frontend_url,
       path: "/",
-      expires: new Date(Date.now() + 86400000),
+      // expires: new Date(Date.now() + 86400000),
       secure: true,
       httpOnly: true,
       sameSite: "none",
     });
 
-    res.json({ token });
+    res.json({ accessToken, refreshToken });
   } catch (error) {
     console.error("Got an error", error);
     res.status(500).send("Internal Server Error");
@@ -85,8 +102,109 @@ const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 const logout = async (req: Request, res: Response): Promise<void> => {
-  res.clearCookie("token");
-  res.status(200).send("Logged out successfully");
+  res.clearCookie("accessToken");
+
+  const authHeaders = req.headers["authorization"];
+  const token = authHeaders && authHeaders.split(" ")[1];
+  if (token == null) {
+    res.sendStatus(401);
+    return;
+  }
+
+  if (!process.env.SERVER_REFRESH_TOKEN_SECRET) {
+    res.status(400).send("Missing auth secret");
+    return;
+  }
+
+  jwt.verify(
+    token,
+    process.env.SERVER_REFRESH_TOKEN_SECRET,
+    async (err, user) => {
+      if (err) {
+        res.status(403).send(err.message);
+        return;
+      }
+
+      const userId = (user as JwtPayload & { id: Types.ObjectId }).id;
+      try {
+        const user = await User.findById(userId);
+        if (user == null) return res.status(403).send("Invalid request");
+        if (!user?.refreshTokens || !user.refreshTokens.includes(token)) {
+          user.refreshTokens = []; // Invalidate all user refreshTokens
+          await user.save();
+          res.status(403).send("Invalid request");
+          return;
+        }
+        user.refreshTokens.splice(user.refreshTokens.indexOf(token), 1);
+        await user.save();
+        res.status(200).send("Logged out successfully");
+      } catch (err) {
+        res.status(403).send(err);
+      }
+    }
+  );
 };
 
-export const AuthController = { register, login, logout };
+const refreshToken = async (req: Request, res: Response): Promise<void> => {
+  const authHeaders = req.headers["authorization"];
+  const token = authHeaders && authHeaders.split(" ")[1];
+  if (token == null) {
+    res.sendStatus(401);
+    return;
+  }
+
+  const existingRefreshToken = req.body.refreshToken;
+  if (!existingRefreshToken) {
+    res.status(400).send("No refresh token");
+    return;
+  }
+
+  if (!process.env.SERVER_REFRESH_TOKEN_SECRET) {
+    res.status(400).send("Missing auth secret");
+    return;
+  }
+
+  jwt.verify(
+    existingRefreshToken,
+    process.env.SERVER_REFRESH_TOKEN_SECRET,
+    async (err, user) => {
+      if (err) {
+        res.status(403).send(err.message);
+        return;
+      }
+      const userId = (user as JwtPayload & { id: Types.ObjectId }).id;
+      try {
+        const user = await User.findById(userId);
+        if (user == null) {
+          res.status(403).send("Invalid request");
+          return;
+        }
+        if (
+          !user?.refreshTokens ||
+          !user.refreshTokens.includes(existingRefreshToken)
+        ) {
+          user.refreshTokens = [];
+          await user.save();
+          res.status(403).send("Invalid request");
+          return;
+        }
+        const accessToken = createToken(userId, TOKEN_TYPE.ACCESS_TOKEN);
+        const refreshToken = createToken(userId, TOKEN_TYPE.REFRESH_TOKEN);
+
+        if (!accessToken || !refreshToken) {
+          res.status(500).send("Internal Server Error");
+          return;
+        }
+
+        user.refreshTokens[user.refreshTokens.indexOf(refreshToken)] =
+          refreshToken;
+        await user.save();
+        res.status(200).send({ accessToken, refreshToken });
+      } catch (err) {
+        res.status(403).send(err);
+      }
+    }
+  );
+};
+
+export const AuthController = { register, login, logout, refreshToken };
