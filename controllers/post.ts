@@ -14,7 +14,7 @@ const createPost = async (req: Request<{}, {}, IPost>, res: Response) => {
     // Mongoose will generate an _id for the new post
     const newPostDocument = await newPost.save();
     res
-      .status(200)
+      .status(201)
       .json({ message: `Post ${newPostDocument._id} created successfully` });
   } catch (err) {
     res.status(500).json(err);
@@ -78,4 +78,26 @@ const updatePost = async (req: Request, res: Response) => {
   }
 };
 
-export const PostController = { createPost, getPosts, getPostById, updatePost };
+/**
+ * Delete a post - DELETE /post/:id
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
+const deletePost = async (req: Request, res: Response) => {
+  const postId = req.params.id;
+
+  try {
+    await Post.findByIdAndDelete(postId);
+    res.status(200).json({ message: `Post ${postId} deleted successfully` });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+export const PostController = {
+  createPost,
+  getPosts,
+  getPostById,
+  updatePost,
+  deletePost,
+};

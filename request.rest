@@ -25,6 +25,9 @@ Content-Type: application/json
     "sender_id": "1"
 }
 
+###
+DELETE http://localhost:3000/post/6741a07761c9d48c34165a0d
+
 # Comment
 ###
 POST http://localhost:3000/comment

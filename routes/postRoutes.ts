@@ -7,5 +7,6 @@ router.post("/", authenticate, PostController.createPost);
 router.get("/", PostController.getPosts);
 router.get("/:id", PostController.getPostById);
 router.put("/:id", authenticate, PostController.updatePost);
+router.delete("/:id", authenticate, PostController.deletePost);
 
 export default router;
