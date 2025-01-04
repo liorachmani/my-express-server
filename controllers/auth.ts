@@ -1,15 +1,18 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response } from "express";
-import User from "../models/user";
+import User, { IUser } from "../models/user";
 import bcrypt from "bcrypt";
 import { TOKEN_TYPE, createToken, verifyToken } from "./utils";
 import { Types } from "mongoose";
 
-const register = async (req: Request, res: Response): Promise<void> => {
+const register = async (
+  req: Request<{}, IUser, IUser>,
+  res: Response
+): Promise<void> => {
   try {
-    const { email, password, firstname, lastname, username } = req.body;
+    const { email, password, firstName, lastName, userName } = req.body;
 
-    if (!(email && password && firstname && lastname && username)) {
+    if (!(email && password && firstName && lastName && userName)) {
       res.status(400).send("All fields are required");
       return;
     }
@@ -25,17 +28,14 @@ const register = async (req: Request, res: Response): Promise<void> => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = new User({
-      firstname,
-      lastname,
-      username,
+      firstName,
+      lastName,
+      userName,
       email,
       password: hashedPassword,
     });
 
     const user = await newUser.save();
-    const accessToken = createToken(user._id, TOKEN_TYPE.ACCESS_TOKEN);
-    const refreshToken = createToken(user._id, TOKEN_TYPE.REFRESH_TOKEN);
-    user.refreshTokens = [refreshToken as string];
     await user.save();
 
     res.status(201).send(user);
@@ -88,6 +88,7 @@ const logout = async (req: Request, res: Response): Promise<void> => {
     const existingRefreshToken = req.body.refreshToken;
     const user = await verifyToken(existingRefreshToken);
     await user.save();
+    res.status(200).send("Logged out successfully");
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }

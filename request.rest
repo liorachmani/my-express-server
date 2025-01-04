@@ -2,11 +2,12 @@
 ###
 POST http://localhost:3000/post
 Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzkxYzMyZWQ1MGVlYjViNTY5NTViNiIsInRpbWVzdGFtcCI6MTczNTk5MTQwMjk2NCwiaWF0IjoxNzM1OTkxNDAyLCJleHAiOjE3MzU5OTUwMDJ9.cOZ4F7j-BFVmIfEis6bo3KfIrpQuFNbZRs02tgT9HEg
 
 {
     "title": "Title",
     "content": "Content",
-    "sender_id": "1"
+    "sender_id": "67791c32ed50eeb5b56955b6"
 }
 ###
 GET http://localhost:3000/post
@@ -62,7 +63,8 @@ Content-Type: application/json
     "email": "ido@gmai.com",
     "password": "123",
     "firstName": "ido",
-    "lastName": "winkler"
+    "lastName": "winkler",
+    "userName": "ido"
 }
 ###
 
@@ -74,6 +76,45 @@ Content-Type: application/json
     "email": "ido.com",
     "password": "123",
     "firstName": "ido",
-    "lastName": "winkler"
+    "lastName": "winkler",
+    "userName": "ido"
 }
 ###
+
+# Auth
+###
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "email": "lior@gmail.com",
+    "password": "123",
+    "firstName": "lior",
+    "lastName": "rachmani",
+    "userName": "lior"
+}
+
+###
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "lior@gmail.com",
+    "password": "123"
+}
+
+###
+POST http://localhost:3000/auth/logout
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzkxYzMyZWQ1MGVlYjViNTY5NTViNiIsInRpbWVzdGFtcCI6MTczNTk5MjgwMzUzOCwiaWF0IjoxNzM1OTkyODAzLCJleHAiOjE3MzY1OTc2MDN9.W2Muku7STPVMbIvytjhrV5jWTvHU_5XtobYnl2wOaxQ"
+}
+
+###
+POST http://localhost:3000/auth/refresh
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzkxYzMyZWQ1MGVlYjViNTY5NTViNiIsInRpbWVzdGFtcCI6MTczNTk5MjgwMzUzOCwiaWF0IjoxNzM1OTkyODAzLCJleHAiOjE3MzY1OTc2MDN9.W2Muku7STPVMbIvytjhrV5jWTvHU_5XtobYnl2wOaxQ"
+}

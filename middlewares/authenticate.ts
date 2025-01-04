@@ -16,12 +16,12 @@ export const authenticate = async (
     res.status(500).send("Internal Server Error");
     return;
   }
-  jwt.verify(token, process.env.SERVER_ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.SERVER_ACCESS_TOKEN_SECRET, (err, payload) => {
     if (err) {
       res.status(403).send("Invalid token");
       return;
     }
-    req.user = user;
+    req.user = payload;
     next();
   });
 };
