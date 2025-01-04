@@ -1,7 +1,7 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import * as core from "express-serve-static-core";
-import Post, { IPost } from "../models/post";
+import Post from "../models/post";
 import Comment from "../models/comment";
 import initApp from "../server";
 
@@ -178,7 +178,7 @@ describe("CommentController", () => {
     jest.spyOn(Comment, "findByIdAndDelete").mockImplementationOnce(() => {
       throw new Error("Database error");
     });
-    
+
     const comment = new Comment({
       message: "comment message",
       sender_id: "12345",
@@ -189,5 +189,18 @@ describe("CommentController", () => {
     const res = await request(app).delete(`/comment/${comment._id}`);
 
     expect(res.status).toBe(500);
+  });
+
+  it("should handle errors when deleting a non exisitng comment", async () => {
+    const comment = new Comment({
+      message: "comment message",
+      sender_id: "12345",
+      post_id: postId,
+    });
+    await comment.save();
+
+    const res = await request(app).delete(`/comment/67474a3d2651e79673ab702f`);
+
+    expect(res.status).toBe(404);
   });
 });

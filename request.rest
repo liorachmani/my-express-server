@@ -39,18 +39,18 @@ GET http://localhost:3000/comment
 ###
 GET http://localhost:3000/comment?postId=67474a3d2651e79673ab702f
 ###
-GET http://localhost:3000/comment/6749cb55afbf646b4890dc07
+GET http://localhost:3000/comment/6778f7f548cb7802a935f9a4 
 ###
-PUT http://localhost:3000/comment/6749cb55afbf646b4890dc07
+PUT http://localhost:3000/comment/677937f96a58d21af8a2827e 
 Content-Type: application/json
 
 {
-    "message": "updated messageeeeeee",
+    "message33444": "updated messageeeeeee",
     "sender_id": "2",
     "post_id": "67474a3d2651e79673ab702f"
 }
 ###
-DELETE http://localhost:3000/comment/6749cb9bafbf646b4890dc0e
+DELETE http://localhost:3000/comment/6778f7f548cb7802a935f9a4   
 
 
 # User
@@ -59,12 +59,21 @@ POST http://localhost:3000/user
 Content-Type: application/json
 
 {
-    "email": "ido@gmai.com",
+    "email": "ido3@gmai.com",
     "password": "123",
     "firstName": "ido",
     "lastName": "winkler"
 }
-###
+
+### delete user
+DELETE http://localhost:3000/user/67794da8e94a5a981864b52b    
+
+### get user by id
+GET http://localhost:3000/user/6779363fb2dcaebe0376ffa5  
+
+
+### delete non existing user
+DELETE http://localhost:3000/user/67474a3d2651e79673ab702f
 
 ### invalid email
 POST http://localhost:3000/user
@@ -76,4 +85,14 @@ Content-Type: application/json
     "firstName": "ido",
     "lastName": "winkler"
 }
-###
+
+### update user info
+PUT http://localhost:3000/user/6779363fb2dcaebe0376ffa5
+Content-Type: application/json
+
+{
+    "email": "ido3@gmai.com",
+    "firstName": "idoooooo",
+    "lastName": "winkler"
+}
+

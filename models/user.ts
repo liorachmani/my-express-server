@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
-export interface IUser {
-  email: string;
-  password: string;
+export interface IUserInfo {
   firstName: string;
   lastName: string;
+}
+
+export interface IUser extends IUserInfo {
+  email: string;
+  password: string;
   refreshTokens?: string[];
 }
 

@@ -99,7 +99,12 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
 
   try {
     const deletedComment = await Comment.findByIdAndDelete(commentId);
-    res.status(200).json(deletedComment);
+
+    if (!deletedComment) {
+      res.status(404).json({ message: `comment ${commentId} not found` });
+    } else {
+      res.status(200).json(deletedComment);
+    }
   } catch (err) {
     res.status(500).json(err);
   }
