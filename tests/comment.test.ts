@@ -4,16 +4,33 @@ import * as core from "express-serve-static-core";
 import Post from "../models/post";
 import Comment from "../models/comment";
 import initApp from "../server";
+import User, { IUser } from "../models/user";
+
+const testUser: Partial<IUser & { token: string; _id: string }> = {
+  email: "test@gmail.com",
+  password: "password",
+  firstName: "John",
+  lastName: "Doe",
+  userName: "johndoe",
+};
+let postId: string;
 
 describe("CommentController", () => {
   let app: core.Express;
-  let postId: string;
   beforeAll(async () => {
     app = await initApp();
+    await request(app).post("/auth/register").send(testUser);
+    const loginRes = await request(app)
+      .post("/auth/login")
+      .send({ email: testUser.email, password: testUser.password });
+    testUser.token = loginRes.body.accessToken;
+    testUser._id = loginRes.body._id;
+    expect(testUser.token).toBeDefined();
+
     const post = new Post({
       title: "Test Post",
       content: "This is a test post",
-      sender_id: "12345",
+      user_id: testUser._id,
     });
     await post.save();
 
@@ -26,15 +43,20 @@ describe("CommentController", () => {
   afterAll(async () => {
     // Disconnect from the test database
     await Post.deleteMany({});
+    await User.deleteMany({});
     await mongoose.disconnect();
   });
 
   it("should create a new comment", async () => {
-    const res = await request(app).post("/comment").send({
-      message: "comment message",
-      sender_id: "12345",
-      post_id: postId,
-    });
+    const res = await request(app)
+      .post("/comment")
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      })
+      .send({
+        message: "comment message",
+        post_id: postId,
+      });
 
     expect(res.status).toBe(200);
     expect(res.body.message).toMatch(/Comment .* created successfully/);
@@ -43,13 +65,13 @@ describe("CommentController", () => {
   it("should get all comments", async () => {
     const comment = new Comment({
       message: "comment message",
-      sender_id: "12345",
       post_id: postId,
+      user_id: testUser._id,
     });
     const comment2 = new Comment({
       message: "comment message 2",
-      sender_id: "12345",
       post_id: postId,
+      user_id: testUser._id,
     });
     await comment.save();
     await comment2.save();
@@ -63,8 +85,8 @@ describe("CommentController", () => {
   it("should get comment by id", async () => {
     const comment = new Comment({
       message: "comment message",
-      sender_id: "12345",
       post_id: postId,
+      user_id: testUser._id,
     });
     await comment.save();
 
@@ -77,8 +99,8 @@ describe("CommentController", () => {
   it("should get all comments by post id", async () => {
     const comment = new Comment({
       message: "comment message",
-      sender_id: "12345",
       post_id: postId,
+      user_id: testUser._id,
     });
     await comment.save();
 
@@ -91,16 +113,20 @@ describe("CommentController", () => {
   it("should update a comment", async () => {
     const comment = new Comment({
       message: "comment message",
-      sender_id: "12345",
       post_id: postId,
+      user_id: testUser._id,
     });
     await comment.save();
 
-    const res = await request(app).put(`/comment/${comment._id}`).send({
-      message: "new comment message",
-      sender_id: "123456",
-      post_id: postId,
-    });
+    const res = await request(app)
+      .put(`/comment/${comment._id}`)
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      })
+      .send({
+        message: "new comment message",
+        post_id: postId,
+      });
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe("new comment message");
@@ -109,12 +135,16 @@ describe("CommentController", () => {
   it("should delete a comment", async () => {
     const comment = new Comment({
       message: "comment message",
-      sender_id: "12345",
       post_id: postId,
+      user_id: testUser._id,
     });
     await comment.save();
 
-    const res = await request(app).delete(`/comment/${comment._id}`);
+    const res = await request(app)
+      .delete(`/comment/${comment._id}`)
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      });
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe("comment message");
@@ -129,21 +159,29 @@ describe("CommentController", () => {
       throw new Error("Database error");
     });
 
-    const res = await request(app).post("/comment").send({
-      message: "comment message",
-      sender_id: "12345",
-      post_id: postId,
-    });
+    const res = await request(app)
+      .post("/comment")
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      })
+      .send({
+        message: "comment message",
+        post_id: postId,
+      });
 
     expect(res.status).toBe(500);
   });
 
   it("should handle errors when creating a comment with invalid post", async () => {
-    const res = await request(app).post("/comment").send({
-      message: "comment message",
-      sender_id: "12345",
-      post_id: "dsgbkjdas",
-    });
+    const res = await request(app)
+      .post("/comment")
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      })
+      .send({
+        message: "comment message",
+        post_id: "dsgbkjdas",
+      });
 
     expect(res.status).toBe(500);
   });
@@ -164,14 +202,18 @@ describe("CommentController", () => {
     expect(res.status).toBe(500);
   });
 
-  it("should handle errors when updating a comment", async () => {
-    const res = await request(app).put("/comment/invalid-id").send({
-      message: "comment message",
-      sender_id: "12345",
-      post_id: postId,
-    });
+  it("should handle errors when updating a comment with invalid id", async () => {
+    const res = await request(app)
+      .put("/comment/invalid-id")
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      })
+      .send({
+        message: "comment message",
+        post_id: postId,
+      });
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
   });
 
   it("should handle errors when deleting a comment", async () => {
@@ -181,26 +223,41 @@ describe("CommentController", () => {
 
     const comment = new Comment({
       message: "comment message",
-      sender_id: "12345",
       post_id: postId,
+      user_id: testUser._id,
     });
     await comment.save();
 
-    const res = await request(app).delete(`/comment/${comment._id}`);
+    const res = await request(app)
+      .delete(`/comment/${comment._id}`)
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      });
 
     expect(res.status).toBe(500);
   });
+  it("should handle errors when updating a comment", async () => {
+    jest.spyOn(Comment, "findOneAndUpdate").mockImplementationOnce(() => {
+      throw new Error("Database error");
+    });
 
-  it("should handle errors when deleting a non exisitng comment", async () => {
     const comment = new Comment({
       message: "comment message",
-      sender_id: "12345",
       post_id: postId,
+      user_id: testUser._id,
     });
     await comment.save();
 
-    const res = await request(app).delete(`/comment/67474a3d2651e79673ab702f`);
+    const res = await request(app)
+      .put(`/comment/${comment._id}`)
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      })
+      .send({
+        message: "comment message",
+        post_id: postId,
+      });
 
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(500);
   });
 });

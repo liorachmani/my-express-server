@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Post, { IPost } from "../models/post";
+import { JwtPayload } from "jsonwebtoken";
 
 /**
  * Create a new post - POST /post
@@ -9,7 +10,9 @@ import Post, { IPost } from "../models/post";
 const createPost = async (req: Request<{}, {}, IPost>, res: Response) => {
   try {
     const post = req.body;
-    const newPost = new Post(post);
+    const userId = (req.user as JwtPayload).id;
+
+    const newPost = new Post({ ...post, user_id: userId });
 
     // Mongoose will generate an _id for the new post
     const newPostDocument = await newPost.save();
@@ -32,7 +35,7 @@ const getPosts = async (req: Request, res: Response) => {
   try {
     let posts: IPost[];
     if (senderId) {
-      posts = await Post.find({ sender_id: senderId });
+      posts = await Post.find({ user_id: senderId });
     } else {
       posts = await Post.find();
     }

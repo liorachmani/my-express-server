@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export interface IPost {
   title: string;
   content: string;
-  sender_id: string;
+  user_id: string;
 }
 
 const postSchema = new mongoose.Schema({
@@ -15,8 +15,9 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  sender_id: {
-    type: String,
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });

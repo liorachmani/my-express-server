@@ -2,31 +2,31 @@
 ###
 POST http://localhost:3000/post
 Content-Type: application/json
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzkxYzMyZWQ1MGVlYjViNTY5NTViNiIsInRpbWVzdGFtcCI6MTczNTk5MTQwMjk2NCwiaWF0IjoxNzM1OTkxNDAyLCJleHAiOjE3MzU5OTUwMDJ9.cOZ4F7j-BFVmIfEis6bo3KfIrpQuFNbZRs02tgT9HEg
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2E5MWZhZDQ4MjI3N2VlMTI0YTA1ZiIsInRpbWVzdGFtcCI6MTczNjA4NjAxOTAxOSwiaWF0IjoxNzM2MDg2MDE5LCJleHAiOjE3MzYzNDUyMTl9.Uj7guwwRgFi_CyNzqNegFsoElP8I49D3GrwMaRl5heQ
 
 {
     "title": "Title",
     "content": "Content",
-    "sender_id": "67791c32ed50eeb5b56955b6"
 }
 ###
 GET http://localhost:3000/post
 ###
 GET http://localhost:3000/post?sender=1
 ###
-GET http://localhost:3000/post/6741a07761c9d48c34165a0d
+GET http://localhost:3000/post/677a96853685998bbc58b16c
 ###
-PUT http://localhost:3000/post/6741a07761c9d48c34165a0d
+PUT http://localhost:3000/post/677a9bdde5974f7c3500aa0c 
 Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2E5MWZhZDQ4MjI3N2VlMTI0YTA1ZiIsInRpbWVzdGFtcCI6MTczNjA4NjAxOTAxOSwiaWF0IjoxNzM2MDg2MDE5LCJleHAiOjE3MzYzNDUyMTl9.Uj7guwwRgFi_CyNzqNegFsoElP8I49D3GrwMaRl5heQ
 
 {
-    "title": "Updated title",
+    "title": "Updated title222",
     "content": "Updated content",
-    "sender_id": "1"
 }
 
 ###
-DELETE http://localhost:3000/post/6741a07761c9d48c34165a0d
+DELETE http://localhost:3000/post/677a9cf258c8b91eb69a4213 
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2E5YzYyMjExZTE3YTE1YmFlNjM5YyIsInRpbWVzdGFtcCI6MTczNjA4ODY4ODI4OSwiaWF0IjoxNzM2MDg4Njg4LCJleHAiOjE3MzYzNDc4ODh9.HNPky1BRl-gE7pbpiNoyp--9kGceRstUUwQYF1isPt0
 
 # Comment
 ###
@@ -35,7 +35,6 @@ Content-Type: application/json
 
 {
     "message": "hi this is a message 2",
-    "sender_id": "1",
     "post_id": "67474a3d2651e79673ab702f"
 }
 ###
@@ -50,7 +49,6 @@ Content-Type: application/json
 
 {
     "message33444": "updated messageeeeeee",
-    "sender_id": "2",
     "post_id": "67474a3d2651e79673ab702f"
 }
 ###
@@ -71,14 +69,10 @@ Content-Type: application/json
 }
 
 ### delete user
-DELETE http://localhost:3000/user/67794da8e94a5a981864b52b    
+DELETE http://localhost:3000/user  
 
 ### get user by id
 GET http://localhost:3000/user/6779363fb2dcaebe0376ffa5  
-
-
-### delete non existing user
-DELETE http://localhost:3000/user/67474a3d2651e79673ab702f
 
 ### invalid email
 POST http://localhost:3000/user
@@ -93,11 +87,10 @@ Content-Type: application/json
 }
 
 ### update user info
-PUT http://localhost:3000/user/6779363fb2dcaebe0376ffa5
+PUT http://localhost:3000/user
 Content-Type: application/json
 
 {
-    "email": "ido3@gmai.com",
     "firstName": "idoooooo",
     "lastName": "winkler"
 }
@@ -110,11 +103,11 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "email": "lior@gmail.com",
+    "email": "id02@gmail.com",
     "password": "123",
-    "firstName": "lior",
-    "lastName": "rachmani",
-    "userName": "lior"
+    "firstName": "ido",
+    "lastName": "fdsd",
+    "userName": "lfdsfdsior"
 }
 
 ###
@@ -122,7 +115,7 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email": "lior@gmail.com",
+    "email": "id02@gmail.com",
     "password": "123"
 }
 

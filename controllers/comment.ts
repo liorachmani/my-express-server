@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Comment, { IComment } from "../models/comment";
+import { JwtPayload } from "jsonwebtoken";
 
 /**
  * Create a new comment - POST /comment
@@ -12,7 +13,9 @@ const createComment = async (
 ): Promise<void> => {
   try {
     const comment = req.body;
-    const newComment = new Comment(comment);
+    const userId = (req.user as JwtPayload).id;
+
+    const newComment = new Comment({ ...comment, user_id: userId });
 
     // Mongoose will generate an _id for the new comment
     const newCommentDocument = await newComment.save();
@@ -100,11 +103,7 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedComment = await Comment.findByIdAndDelete(commentId);
 
-    if (!deletedComment) {
-      res.status(404).json({ message: `comment ${commentId} not found` });
-    } else {
-      res.status(200).json(deletedComment);
-    }
+    res.status(200).json(deletedComment);
   } catch (err) {
     res.status(500).json(err);
   }

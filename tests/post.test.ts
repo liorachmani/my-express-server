@@ -44,7 +44,6 @@ describe("PostController", () => {
       .send({
         title: "Test Post",
         content: "This is a test post",
-        sender_id: "12345",
       });
 
     expect(res.status).toBe(201);
@@ -55,7 +54,7 @@ describe("PostController", () => {
     const post = new Post({
       title: "Test Post",
       content: "This is a test post",
-      sender_id: "12345",
+      user_id: testUser._id,
     });
     await post.save();
 
@@ -70,17 +69,17 @@ describe("PostController", () => {
     const post1 = new Post({
       title: "Post 1",
       content: "Content 1",
-      sender_id: "12345",
+      user_id: testUser._id,
     });
     const post2 = new Post({
       title: "Post 2",
       content: "Content 2",
-      sender_id: "67890",
+      user_id: '677aadc5c9d8d72ddbdec851',
     });
     await post1.save();
     await post2.save();
 
-    const res = await request(app).get("/post").query({ sender: "12345" });
+    const res = await request(app).get("/post").query({ sender: testUser._id });
 
     expect(res.status).toBe(200);
     expect(res.body.length).toBe(1);
@@ -91,7 +90,7 @@ describe("PostController", () => {
     const post = new Post({
       title: "Test Post",
       content: "This is a test post",
-      sender_id: "12345",
+      user_id: testUser._id,
     });
     await post.save();
 
@@ -105,7 +104,7 @@ describe("PostController", () => {
     const post = new Post({
       title: "Test Post",
       content: "This is a test post",
-      sender_id: "12345",
+      user_id: testUser._id,
     });
     await post.save();
 
@@ -117,7 +116,6 @@ describe("PostController", () => {
       .send({
         title: "Updated Post",
         content: "This is an updated test post",
-        sender_id: "12345",
       });
 
     expect(res.status).toBe(200);
@@ -128,7 +126,7 @@ describe("PostController", () => {
     const post = new Post({
       title: "Test Post",
       content: "This is a test post",
-      sender_id: "12345",
+      user_id: testUser._id,
     });
     await post.save();
 
@@ -155,7 +153,52 @@ describe("PostController", () => {
       .send({
         title: "Test Post",
         content: "This is a test post",
-        sender_id: "12345",
+      });
+
+    expect(res.status).toBe(500);
+  });
+
+  it("should handle errors when updating a post", async () => {
+    jest.spyOn(Post, "findOneAndUpdate").mockImplementationOnce(() => {
+      throw new Error("Database error");
+    });
+
+    const post = new Post({
+      title: "Test Post",
+      content: "This is a test post",
+      user_id: testUser._id,
+    });
+    await post.save();
+
+    const res = await request(app)
+      .put(`/post/${post._id}`)
+      .set({
+        authorization: `JWT ${testUser.token}`,
+      })
+      .send({
+        title: "Test Post",
+        content: "This is a test post",
+      });
+
+    expect(res.status).toBe(500);
+  });
+
+  it("should handle errors when deleting a post", async () => {
+    jest.spyOn(Post, "findByIdAndDelete").mockImplementationOnce(() => {
+      throw new Error("Database error");
+    });
+
+    const post = new Post({
+      title: "Test Post",
+      content: "This is a test post",
+      user_id: testUser._id,
+    });
+    await post.save();
+
+    const res = await request(app)
+      .delete(`/post/${post._id}`)
+      .set({
+        authorization: `JWT ${testUser.token}`,
       });
 
     expect(res.status).toBe(500);
@@ -177,7 +220,7 @@ describe("PostController", () => {
     expect(res.status).toBe(500);
   });
 
-  it("should handle errors when updating a post", async () => {
+  it("should handle errors when updating a post with invalid id", async () => {
     const res = await request(app)
       .put("/post/invalid-id")
       .set({
@@ -186,19 +229,19 @@ describe("PostController", () => {
       .send({
         title: "Updated Post",
         content: "This is an updated test post",
-        sender_id: "12345",
+        user_id: testUser._id,
       });
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
   });
 
-  it("should handle errors when deleting a post", async () => {
+  it("should handle errors when deleting a post with invalid id", async () => {
     const res = await request(app)
       .delete("/post/invalid-id")
       .set({
         authorization: `JWT ${testUser.token}`,
       });
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
   });
 });
