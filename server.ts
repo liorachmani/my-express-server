@@ -4,6 +4,7 @@ import { Express } from "express-serve-static-core";
 import bodyParser from "body-parser";
 import postRouter from "./routes/postRoutes";
 import commentRouter from "./routes/commentRoutes";
+import authRouter from "./routes/authRoutes";
 import userRouter from "./routes/userRoutes";
 import mongoose from "mongoose";
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "1mb" }));
 app.use(bodyParser.json());
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
+app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
 const db = mongoose.connection;

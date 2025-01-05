@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 export interface IUserInfo {
   firstName: string;
@@ -8,6 +8,7 @@ export interface IUserInfo {
 export interface IUser extends IUserInfo {
   email: string;
   password: string;
+  userName: string;
   refreshTokens?: string[];
 }
 
@@ -29,10 +30,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userName: {
+    type: String,
+    required: true,
+  },
   refreshTokens: {
     type: [String],
     default: [],
   },
 });
 
-export default mongoose.model<IUser & mongoose.Document>("User", userSchema);
+export default mongoose.model<IUser & mongoose.Document<Types.ObjectId>>(
+  "User",
+  userSchema
+);
