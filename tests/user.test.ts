@@ -51,6 +51,7 @@ describe("UserController", () => {
       .send({
         firstName: "ido0000000",
         lastName: "w",
+        userName: 'ssdsda'
       });
 
     expect(res.status).toBe(200);
@@ -87,6 +88,7 @@ describe("UserController", () => {
       .send({
         firstName: "ido0000000",
         lastName: "w",
+        userName: 'ssdsda'
       });
 
     expect(res.status).toBe(500);
@@ -102,8 +104,6 @@ describe("UserController", () => {
       .set({
         authorization: `JWT ${testUser.token}`,
       });
-
-    console.log(res.body);
 
     expect(res.status).toBe(500);
   });

@@ -53,6 +53,7 @@ Content-Type: application/json
 }
 ###
 DELETE http://localhost:3000/comment/6778f7f548cb7802a935f9a4   
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2E5YzYyMjExZTE3YTE1YmFlNjM5YyIsInRpbWVzdGFtcCI6MTczNjA4ODY4ODI4OSwiaWF0IjoxNzM2MDg4Njg4LCJleHAiOjE3MzYzNDc4ODh9.HNPky1BRl-gE7pbpiNoyp--9kGceRstUUwQYF1isPt0
 
 
 # User
@@ -70,6 +71,7 @@ Content-Type: application/json
 
 ### delete user
 DELETE http://localhost:3000/user  
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2E5YzYyMjExZTE3YTE1YmFlNjM5YyIsInRpbWVzdGFtcCI6MTczNjA4ODY4ODI4OSwiaWF0IjoxNzM2MDg4Njg4LCJleHAiOjE3MzYzNDc4ODh9.HNPky1BRl-gE7pbpiNoyp--9kGceRstUUwQYF1isPt0
 
 ### get user by id
 GET http://localhost:3000/user/6779363fb2dcaebe0376ffa5  
@@ -89,10 +91,12 @@ Content-Type: application/json
 ### update user info
 PUT http://localhost:3000/user
 Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2E5YzYyMjExZTE3YTE1YmFlNjM5YyIsInRpbWVzdGFtcCI6MTczNjA4ODY4ODI4OSwiaWF0IjoxNzM2MDg4Njg4LCJleHAiOjE3MzYzNDc4ODh9.HNPky1BRl-gE7pbpiNoyp--9kGceRstUUwQYF1isPt0
 
 {
     "firstName": "idoooooo",
-    "lastName": "winkler"
+    "lastName": "winkler",
+    "userName": "sdaddas"
 }
 
 ###
