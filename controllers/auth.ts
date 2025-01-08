@@ -1,8 +1,7 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response } from "express";
 import User, { IUser } from "../models/user";
 import bcrypt from "bcrypt";
-import { TOKEN_TYPE, createToken, verifyToken } from "./utils";
+import { TOKEN_TYPE, createToken, verifyToken } from "../utils/authentication";
 import { Types } from "mongoose";
 
 const register = async (
@@ -36,7 +35,6 @@ const register = async (
     });
 
     const user = await newUser.save();
-    await user.save();
 
     res.status(201).send(user);
   } catch (error) {

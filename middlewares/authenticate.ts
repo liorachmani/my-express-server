@@ -1,6 +1,12 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 
+declare module "express-serve-static-core" {
+  interface Request {
+    user?: string | jwt.JwtPayload;
+  }
+}
+
 export const authenticate = async (
   req: Request,
   res: Response,
