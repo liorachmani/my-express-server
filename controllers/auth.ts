@@ -3,6 +3,7 @@ import User, { IUser } from "../models/user";
 import bcrypt from "bcrypt";
 import { TOKEN_TYPE, createToken, verifyToken } from "../utils/authentication";
 import { Types } from "mongoose";
+import { isValidEmail } from "../utils/validation";
 
 const register = async (
   req: Request<{}, IUser, IUser>,
@@ -13,6 +14,11 @@ const register = async (
 
     if (!(email && password && firstName && lastName && userName)) {
       res.status(400).send("All fields are required");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      res.status(422).json({ message: `User's email invalid: ${email}` });
       return;
     }
 
