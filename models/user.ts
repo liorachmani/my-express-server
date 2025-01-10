@@ -3,12 +3,12 @@ import mongoose, { Types } from "mongoose";
 export interface IUserInfo {
   firstName: string;
   lastName: string;
+  userName: string;
 }
 
 export interface IUser extends IUserInfo {
   email: string;
   password: string;
-  userName: string;
   refreshTokens?: string[];
 }
 
