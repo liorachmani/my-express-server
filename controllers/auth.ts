@@ -44,7 +44,6 @@ const register = async (
 
     res.status(201).send(user);
   } catch (error) {
-    console.error("Got an error", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -82,7 +81,6 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
     res.json({ _id: user._id, accessToken, refreshToken });
   } catch (error) {
-    console.error("Got an error", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -94,7 +92,6 @@ const logout = async (req: Request, res: Response): Promise<void> => {
     await user.save();
     res.status(200).send("Logged out successfully");
   } catch (error) {
-    console.error("Got an error", error);
     res.status(500).send("Internal Server Error");
   }
 };
