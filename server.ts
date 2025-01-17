@@ -9,6 +9,7 @@ import userRouter from "./routes/userRoutes";
 import mongoose from "mongoose";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import cors from 'cors';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ const swaggerOptions = {
 };
 const specs = swaggerJsDoc(swaggerOptions);
 
+app.use(cors());
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(bodyParser.urlencoded({ extended: true, limit: "1mb" }));
 app.use(bodyParser.json());
