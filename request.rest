@@ -2,11 +2,11 @@
 ###
 POST http://localhost:3000/post
 Content-Type: application/json
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2E5MWZhZDQ4MjI3N2VlMTI0YTA1ZiIsInRpbWVzdGFtcCI6MTczNjA4NjAxOTAxOSwiaWF0IjoxNzM2MDg2MDE5LCJleHAiOjE3MzYzNDUyMTl9.Uj7guwwRgFi_CyNzqNegFsoElP8I49D3GrwMaRl5heQ
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODdkZjI2ZWMzMjljZGU0Yzk5MTk5NSIsInRpbWVzdGFtcCI6MTczNjk1NzczOTkwNSwiaWF0IjoxNzM2OTU3NzM5LCJleHAiOjE3Mzc1NjI1Mzl9.PEqATaZbRGy-JcsvnpIFEK9jCrp3ubetJ8ptjG6FhRE
 
 {
-    "title": "Title",
-    "content": "Content",
+    "title": "כותרת של עידו לבדיקההההה",
+    "content": "Conגכגדגכגדכגדכגדכגדכגדכשגדכשגדכדככtent"
 }
 ###
 GET http://localhost:3000/post
@@ -32,6 +32,7 @@ Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2E5YzYyMjEx
 ###
 POST http://localhost:3000/comment
 Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODU3MDIwMjdiODJjNTI3ZWJmNTcxMiIsInRpbWVzdGFtcCI6MTczNjc5ODI1NDA5MSwiaWF0IjoxNzM2Nzk4MjU0LCJleHAiOjE3MzY4MDE4NTR9.deb-GAVsP2YVfuNa2KjhhnUTg0le_WDgGO-ZfnPdS5k
 
 {
     "message": "hi this is a message 2",
@@ -107,11 +108,11 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "email": "id02@gmail.com",
+    "email": "id04@gmail.com",
     "password": "123",
-    "firstName": "ido",
-    "lastName": "fdsd",
-    "userName": "lfdsfdsior"
+    "firstName": "עידו",
+    "lastName": "וקורק'רק'",
+    "userName": "עידוסים"
 }
 
 ###
@@ -119,7 +120,7 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email": "id02@gmail.com",
+    "email": "id04@gmail.com",
     "password": "123"
 }
 
