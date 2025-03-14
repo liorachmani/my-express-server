@@ -186,6 +186,13 @@ router.get("/:id", PostController.getPostById);
  */
 router.put("/:id", authenticate, verifyPostUser, PostController.updatePost);
 
+router.put("/:id/like", authenticate, PostController.likePost);
+router.put(
+  "/:id/unlike",
+  authenticate,
+  PostController.unlikePost
+);
+
 /**
  * @swagger
  * /post/{id}:

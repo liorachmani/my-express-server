@@ -19,9 +19,7 @@ const createComment = async (
 
     // Mongoose will generate an _id for the new comment
     const newCommentDocument = await newComment.save();
-    res.status(200).json({
-      message: `Comment ${newCommentDocument._id} created successfully`,
-    });
+    res.status(200).json(newCommentDocument);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -39,7 +37,7 @@ const getComments = async (req: Request, res: Response): Promise<void> => {
   try {
     let comments: IComment[];
     if (postId) {
-      comments = await Comment.find({ post_id: postId });
+      comments = await Comment.find({ post_id: postId }).populate("user_id");
     } else {
       comments = await Comment.find();
     }
