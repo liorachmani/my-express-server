@@ -6,7 +6,7 @@ import { Types } from "mongoose";
 import { isValidEmail } from "../utils/validation";
 
 const register = async (
-  req: Request<{}, IUser, IUser>,
+  req: Request<{}, Omit<IUser, "password">, IUser>,
   res: Response
 ): Promise<void> => {
   try {
@@ -41,8 +41,15 @@ const register = async (
     });
 
     const user = await newUser.save();
+    const userToReturn = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      userName: user.userName,
+      email: user.email,
+    };
 
-    res.status(201).send(user);
+    res.status(201).send(userToReturn);
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }
@@ -79,7 +86,15 @@ const login = async (req: Request, res: Response): Promise<void> => {
     user.refreshTokens.push(refreshToken);
     await user.save();
 
-    res.json({ _id: user._id, accessToken, refreshToken });
+    const userToReturn = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      userName: user.userName,
+      email: user.email,
+    };
+
+    res.json({ ...userToReturn, accessToken, refreshToken });
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }
@@ -92,6 +107,7 @@ const logout = async (req: Request, res: Response): Promise<void> => {
     await user.save();
     res.status(200).send("Logged out successfully");
   } catch (error) {
+    console.log(error);
     res.status(500).send("Internal Server Error");
   }
 };
