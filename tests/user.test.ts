@@ -10,6 +10,7 @@ const testUser: Partial<IUser & { token: string; _id: string }> = {
   firstName: "John",
   lastName: "Doe",
   userName: "johndoe",
+  image: "default.jpg",
 };
 
 describe("UserController", () => {
@@ -51,7 +52,7 @@ describe("UserController", () => {
       .send({
         firstName: "ido0000000",
         lastName: "w",
-        userName: 'ssdsda'
+        userName: "ssdsda",
       });
 
     expect(res.status).toBe(200);
@@ -88,12 +89,12 @@ describe("UserController", () => {
       .send({
         firstName: "ido0000000",
         lastName: "w",
-        userName: 'ssdsda'
+        userName: "ssdsda",
       });
 
     expect(res.status).toBe(500);
   });
-  
+
   it("should handle errors when deleting a user", async () => {
     jest.spyOn(User, "findByIdAndDelete").mockImplementationOnce(() => {
       throw new Error("Database error");

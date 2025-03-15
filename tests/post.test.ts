@@ -12,6 +12,7 @@ const testUser: Partial<IUser & { token: string; _id: string }> = {
   firstName: "John",
   lastName: "Doe",
   userName: "johndoe",
+  image: "default.jpg",
 };
 describe("PostController", () => {
   let app: core.Express;
@@ -74,7 +75,7 @@ describe("PostController", () => {
     const post2 = new Post({
       title: "Post 2",
       content: "Content 2",
-      user_id: '677aadc5c9d8d72ddbdec851',
+      user_id: "677aadc5c9d8d72ddbdec851",
     });
     await post1.save();
     await post2.save();

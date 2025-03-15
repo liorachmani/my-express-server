@@ -10,6 +10,7 @@ export interface IUser extends IUserInfo {
   email: string;
   password: string;
   refreshTokens?: string[];
+  image: string;
 }
 
 const userSchema = new mongoose.Schema({
@@ -31,6 +32,10 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   userName: {
+    type: String,
+    required: true,
+  },
+  image: {
     type: String,
     required: true,
   },

@@ -6,10 +6,11 @@ import postRouter from "./routes/postRoutes";
 import commentRouter from "./routes/commentRoutes";
 import authRouter from "./routes/authRoutes";
 import userRouter from "./routes/userRoutes";
+import fileRouter from "./routes/fileRoutes";
 import mongoose from "mongoose";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
-import cors from 'cors';
+import cors from "cors";
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "REST server including authentication using JWT",
     },
-    servers: [{ url: "http://localhost:3000", },],
+    servers: [{ url: "http://localhost:3000" }],
   },
   apis: ["./routes/*.ts"],
 };
@@ -39,6 +40,8 @@ app.use("/post", postRouter);
 app.use("/comment", commentRouter);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/file", fileRouter);
+app.use("/public", express.static("public"));
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));

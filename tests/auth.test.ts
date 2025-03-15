@@ -11,6 +11,7 @@ const testUser: IUser & Partial<{ accessToken: string; _id: string }> = {
   firstName: "John",
   lastName: "Doe",
   userName: "johndoe",
+  image: "default.jpg",
 };
 
 describe("AuthController", () => {

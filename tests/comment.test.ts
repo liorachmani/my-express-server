@@ -12,6 +12,7 @@ const testUser: Partial<IUser & { token: string; _id: string }> = {
   firstName: "John",
   lastName: "Doe",
   userName: "johndoe",
+  image: "default.jpg",
 };
 let postId: string;
 
