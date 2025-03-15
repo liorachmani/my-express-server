@@ -35,9 +35,9 @@ const getPosts = async (req: Request, res: Response) => {
   try {
     let posts: IPost[];
     if (senderId) {
-      posts = await Post.find({ user_id: senderId }).sort({ _id: -1 });
+      posts = await Post.find({ user_id: senderId }).populate("user_id").sort({ _id: -1 });
     } else {
-      posts = await Post.find().sort({ _id: -1 });
+      posts = await Post.find().populate("user_id").sort({ _id: -1 });
     }
 
     res.status(200).json(posts);
