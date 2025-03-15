@@ -11,9 +11,9 @@ const register = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { email, password, firstName, lastName, userName } = req.body;
+    const { email, password, firstName, lastName, userName, image } = req.body;
 
-    if (!(email && password && firstName && lastName && userName)) {
+    if (!(email && password && firstName && lastName && userName && image)) {
       res.status(400).send("All fields are required");
       return;
     }
@@ -39,6 +39,7 @@ const register = async (
       userName,
       email,
       password: hashedPassword,
+      image,
     });
 
     const user = await newUser.save();
@@ -73,7 +74,7 @@ const registerGoogle = async (
       return;
     }
 
-    const { email, given_name, family_name, name } = payload;
+    const { email, given_name, family_name, name, picture } = payload;
     const userExist = await User.findOne({ email });
     if (userExist) {
       res.status(409).send("User Already Exist. Please Login");
@@ -88,6 +89,7 @@ const registerGoogle = async (
       userName: name?.split(" ").join("_"),
       email,
       password: randomHash,
+      image: picture,
     });
 
     const user = await newUser.save();
