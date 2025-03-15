@@ -20,6 +20,7 @@ const postSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 export default mongoose.model<IPost & mongoose.Document>("Post", postSchema);

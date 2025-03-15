@@ -35,9 +35,9 @@ const getPosts = async (req: Request, res: Response) => {
   try {
     let posts: IPost[];
     if (senderId) {
-      posts = await Post.find({ user_id: senderId });
+      posts = await Post.find({ user_id: senderId }).sort({ _id: -1 });
     } else {
-      posts = await Post.find();
+      posts = await Post.find().sort({ _id: -1 });
     }
 
     res.status(200).json(posts);
@@ -75,6 +75,50 @@ const updatePost = async (req: Request, res: Response) => {
     const updatedPost = await Post.findOneAndUpdate({ _id: postId }, post, {
       new: true,
     });
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+/**
+ * likes a post - PUT /post/:id/like
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
+const likePost = async (req: Request, res: Response) => {
+  const postId = req.params.id;
+  const userId = (req.user as JwtPayload).id;
+
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { $addToSet: { likes: userId } },
+      { new: true }
+    );
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+/**
+ * unlikes a post - PUT /post/:id/unlike
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
+const unlikePost = async (req: Request, res: Response) => {
+  const postId = req.params.id;
+  const userId = (req.user as JwtPayload).id;
+
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { likes: userId } },
+      { new: true }
+    );
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(500).json(err);
@@ -103,4 +147,6 @@ export const PostController = {
   getPostById,
   updatePost,
   deletePost,
+  likePost,
+  unlikePost,
 };
