@@ -11,4 +11,5 @@ export const userInfoProjection = {
   lastName: 1,
   firstName: 1,
   userName: 1,
+  image: 1,
 };
