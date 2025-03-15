@@ -21,7 +21,3 @@ const uploadFile = async (req: Request, res: Response) => {
 export const FileController = {
   uploadFile,
 };
-
-// router.post("/", upload.single("file"), function (req, res) {
-//     res.status(200).send({ url: base + req.file.path });
-//   });
