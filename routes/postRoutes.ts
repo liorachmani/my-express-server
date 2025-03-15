@@ -24,6 +24,8 @@ const verifyPostUser = verifyUserOnEntity<IPost>(post);
  *         - title
  *         - content
  *         - user_id
+ *       optional:
+ *        - image
  *       properties:
  *         _id:
  *           type: string
@@ -67,6 +69,9 @@ const verifyPostUser = verifyUserOnEntity<IPost>(post);
  *               content:
  *                 type: string
  *                 description: The content of the post
+ *               image:
+ *                 type: string
+ *                 description: The image URL of the post
  *             required:
  *               - title
  *               - content
@@ -170,6 +175,9 @@ router.get("/:id", PostController.getPostById);
  *               content:
  *                 type: string
  *                 description: The content of the post
+ *               image:
+ *                 type: string
+ *                 description: The image URL of the post
  *     responses:
  *       200:
  *         description: Post updated successfully
@@ -185,7 +193,6 @@ router.get("/:id", PostController.getPostById);
  *         description: Server error
  */
 router.put("/:id", authenticate, verifyPostUser, PostController.updatePost);
-
 
 /**
  * @swagger
@@ -220,7 +227,6 @@ router.put("/:id", authenticate, verifyPostUser, PostController.updatePost);
  */
 router.put("/:id/like", authenticate, PostController.likePost);
 
-
 /**
  * @swagger
  * /post/{id}/unlike:
@@ -252,11 +258,7 @@ router.put("/:id/like", authenticate, PostController.likePost);
  *       500:
  *         description: Server error
  */
-router.put(
-  "/:id/unlike",
-  authenticate,
-  PostController.unlikePost
-);
+router.put("/:id/unlike", authenticate, PostController.unlikePost);
 
 /**
  * @swagger
