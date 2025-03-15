@@ -114,6 +114,64 @@ router.post("/register", AuthController.register);
 
 /**
  * @swagger
+ * /auth/google:
+ *   post:
+ *     summary: Register/Login with Google
+ *     description: Authenticate user with Google OAuth credentials
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               credential:
+ *                 type: string
+ *                 description: The Google ID token
+ *             required:
+ *               - credential
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: The user ID
+ *                 firstName:
+ *                   type: string
+ *                   description: The user's first name
+ *                 lastName:
+ *                   type: string
+ *                   description: The user's last name
+ *                 userName:
+ *                   type: string
+ *                   description: The username
+ *                 email:
+ *                   type: string
+ *                   description: The user's email
+ *                 accessToken:
+ *                   type: string
+ *                   description: JWT access token
+ *                 refreshToken:
+ *                   type: string
+ *                   description: JWT refresh token
+ *       400:
+ *         description: Invalid Google Token
+ *       409:
+ *         description: User already exists
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/google", AuthController.registerGoogle);
+
+/**
+ * @swagger
  * /auth/login:
  *   post:
  *     summary: Login a user

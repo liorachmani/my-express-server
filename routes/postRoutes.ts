@@ -216,8 +216,77 @@ router.get("/:id", PostController.getPostById);
  */
 router.put("/:id", authenticate, verifyPostUser, PostController.updatePost);
 
+
+/**
+ * @swagger
+ * /post/{id}/like:
+ *   put:
+ *     summary: likes a post by ID
+ *     description: likes a post by its ID
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the post
+ *     responses:
+ *       200:
+ *         description: Post liked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       403:
+ *         description: Forbidden to like the post
+ *       404:
+ *         description: Post not found
+ *       500:
+ *         description: Server error
+ */
 router.put("/:id/like", authenticate, PostController.likePost);
-router.put("/:id/unlike", authenticate, PostController.unlikePost);
+
+
+/**
+ * @swagger
+ * /post/{id}/unlike:
+ *   put:
+ *     summary: unlike a post by ID
+ *     description: unlikes a post by its ID
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the post
+ *     responses:
+ *       200:
+ *         description: Post unliked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       403:
+ *         description: Forbidden to unlike the post
+ *       404:
+ *         description: Post not found
+ *       500:
+ *         description: Server error
+ */
+router.put(
+  "/:id/unlike",
+  authenticate,
+  PostController.unlikePost
+);
 
 /**
  * @swagger
