@@ -56,12 +56,10 @@ const getPostSuggestion = async (req: Request, res: Response) => {
   try {
     const prompt = "generate a title and content in hebrew to a post in social media website. give interesting and unique subjects. provide the response strictly in JSON format with title and content fields, do not include any additional text outisde the JSON."
     const suggestion = await geminiModel.generateContent(prompt);
-
     const suggestionJson = JSON.parse(suggestion.response.text().replace(/^```json\n/, '').replace(/\n```$/, ''))  
 
     res.status(200).json(suggestionJson);
   } catch (err) {
-    console.log('the error', err)
     res.status(500).json(err);
   }
 };
