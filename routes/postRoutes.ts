@@ -118,6 +118,35 @@ router.post("/", authenticate, PostController.createPost);
  */
 router.get("/", PostController.getPosts);
 
+
+
+/**
+ * @swagger
+ * /post/suggestion:
+ *   get:
+ *     summary: Get a post suggestion
+ *     description: Retrieve a post suggestion made by gemini
+ *     tags:
+ *       - Posts
+ *     responses:
+ *       200:
+ *         description: Returns a suggestion.
+ *         content:
+ *           application/json:
+ *             schema:
+ *                type: object
+ *                properties:
+ *                  title:
+ *                    type: string
+ *                    description: The title of the post
+ *                  content:
+ *                    type: string
+ *                    description: The content of the post
+ *       500:
+ *         description: Server error
+ */
+router.get("/suggestion", authenticate, PostController.getPostSuggestion);
+
 /**
  * @swagger
  * /post/{id}:
@@ -144,6 +173,7 @@ router.get("/", PostController.getPosts);
  *         description: Server error
  */
 router.get("/:id", PostController.getPostById);
+
 
 /**
  * @swagger
