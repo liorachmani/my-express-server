@@ -4,6 +4,7 @@ export const parseUserInfo = (user: IUser): IUserInfo => ({
   firstName: user.firstName,
   lastName: user.lastName,
   userName: user.userName,
+  image: user.image
 });
 
 export const userInfoProjection = {
