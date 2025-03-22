@@ -77,7 +77,25 @@ const registerGoogle = async (
     const { email, given_name, family_name, name, picture } = payload;
     const userExist = await User.findOne({ email });
     if (userExist) {
-      res.status(409).send("User Already Exist. Please Login");
+      const { accessToken, refreshToken } = generateTokens(userExist._id);
+
+      if (!accessToken || !refreshToken) {
+        res.status(500).send("Internal Server Error");
+        return;
+      }
+
+      userExist.refreshTokens = [refreshToken];
+      await userExist.save();
+
+      const userToReturn = {
+        _id: userExist._id,
+        firstName: userExist.firstName,
+        lastName: userExist.lastName,
+        userName: userExist.userName,
+        email: userExist.email,
+      };
+
+      res.status(201).send({ ...userToReturn, accessToken, refreshToken });
       return;
     }
 
