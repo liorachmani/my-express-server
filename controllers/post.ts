@@ -31,17 +31,27 @@ const createPost = async (req: Request<{}, {}, IPost>, res: Response) => {
  * @param {Response} res - Express response object
  */
 const getPosts = async (req: Request, res: Response) => {
-  const senderId = req.query.sender as string;
-  Post;
   try {
-    let posts: IPost[];
-    if (senderId) {
-      posts = await Post.find({ user_id: senderId }).populate("user_id").sort({ _id: -1 });
-    } else {
-      posts = await Post.find().populate("user_id").sort({ _id: -1 });
-    }
+    const senderId = req.query.sender as string | undefined;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
 
-    res.status(200).json(posts);
+    const filter = senderId ? { user_id: senderId } : {};
+
+    const totalPosts = await Post.countDocuments(filter);
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    const posts: IPost[] = await Post.find(filter)
+      .populate("user_id")
+      .sort({ _id: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      posts,
+      currentPage: page,
+      totalPages,
+    });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -54,9 +64,15 @@ const getPosts = async (req: Request, res: Response) => {
  */
 const getPostSuggestion = async (req: Request, res: Response) => {
   try {
-    const prompt = "generate a title and content in hebrew to a post in social media website. give interesting and unique subjects. provide the response strictly in JSON format with title and content fields, do not include any additional text outisde the JSON."
+    const prompt =
+      "generate a title and content in hebrew to a post in social media website. give interesting and unique subjects. provide the response strictly in JSON format with title and content fields, do not include any additional text outisde the JSON.";
     const suggestion = await geminiModel.generateContent(prompt);
-    const suggestionJson = JSON.parse(suggestion.response.text().replace(/^```json\n/, '').replace(/\n```$/, ''))  
+    const suggestionJson = JSON.parse(
+      suggestion.response
+        .text()
+        .replace(/^```json\n/, "")
+        .replace(/\n```$/, "")
+    );
 
     res.status(200).json(suggestionJson);
   } catch (err) {
@@ -167,5 +183,5 @@ export const PostController = {
   deletePost,
   likePost,
   unlikePost,
-  getPostSuggestion
+  getPostSuggestion,
 };
