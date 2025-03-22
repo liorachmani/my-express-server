@@ -30,17 +30,26 @@ const createPost = async (req: Request<{}, {}, IPost>, res: Response) => {
  * @param {Response} res - Express response object
  */
 const getPosts = async (req: Request, res: Response) => {
-  const senderId = req.query.sender as string;
-  Post;
   try {
-    let posts: IPost[];
-    if (senderId) {
-      posts = await Post.find({ user_id: senderId }).sort({ _id: -1 });
-    } else {
-      posts = await Post.find().sort({ _id: -1 });
-    }
+    const senderId = req.query.sender as string | undefined;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
 
-    res.status(200).json(posts);
+    const filter = senderId ? { user_id: senderId } : {};
+
+    const totalPosts = await Post.countDocuments(filter);
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    const posts: IPost[] = await Post.find(filter)
+      .sort({ _id: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      posts,
+      currentPage: page,
+      totalPages,
+    });
   } catch (err) {
     res.status(500).json(err);
   }
