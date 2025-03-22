@@ -24,6 +24,8 @@ const verifyPostUser = verifyUserOnEntity<IPost>(post);
  *         - title
  *         - content
  *         - user_id
+ *       optional:
+ *        - image
  *       properties:
  *         _id:
  *           type: string
@@ -67,6 +69,9 @@ const verifyPostUser = verifyUserOnEntity<IPost>(post);
  *               content:
  *                 type: string
  *                 description: The content of the post
+ *               image:
+ *                 type: string
+ *                 description: The image URL of the post
  *             required:
  *               - title
  *               - content
@@ -113,6 +118,35 @@ router.post("/", authenticate, PostController.createPost);
  */
 router.get("/", PostController.getPosts);
 
+
+
+/**
+ * @swagger
+ * /post/suggestion:
+ *   get:
+ *     summary: Get a post suggestion
+ *     description: Retrieve a post suggestion made by gemini
+ *     tags:
+ *       - Posts
+ *     responses:
+ *       200:
+ *         description: Returns a suggestion.
+ *         content:
+ *           application/json:
+ *             schema:
+ *                type: object
+ *                properties:
+ *                  title:
+ *                    type: string
+ *                    description: The title of the post
+ *                  content:
+ *                    type: string
+ *                    description: The content of the post
+ *       500:
+ *         description: Server error
+ */
+router.get("/suggestion", authenticate, PostController.getPostSuggestion);
+
 /**
  * @swagger
  * /post/{id}:
@@ -139,6 +173,7 @@ router.get("/", PostController.getPosts);
  *         description: Server error
  */
 router.get("/:id", PostController.getPostById);
+
 
 /**
  * @swagger
@@ -170,6 +205,9 @@ router.get("/:id", PostController.getPostById);
  *               content:
  *                 type: string
  *                 description: The content of the post
+ *               image:
+ *                 type: string
+ *                 description: The image URL of the post
  *     responses:
  *       200:
  *         description: Post updated successfully
@@ -185,7 +223,6 @@ router.get("/:id", PostController.getPostById);
  *         description: Server error
  */
 router.put("/:id", authenticate, verifyPostUser, PostController.updatePost);
-
 
 /**
  * @swagger
@@ -220,7 +257,6 @@ router.put("/:id", authenticate, verifyPostUser, PostController.updatePost);
  */
 router.put("/:id/like", authenticate, PostController.likePost);
 
-
 /**
  * @swagger
  * /post/{id}/unlike:
@@ -252,11 +288,7 @@ router.put("/:id/like", authenticate, PostController.likePost);
  *       500:
  *         description: Server error
  */
-router.put(
-  "/:id/unlike",
-  authenticate,
-  PostController.unlikePost
-);
+router.put("/:id/unlike", authenticate, PostController.unlikePost);
 
 /**
  * @swagger

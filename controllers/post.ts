@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Post, { IPost } from "../models/post";
 import { JwtPayload } from "jsonwebtoken";
+import { geminiModel } from "../utils/ai";
 
 /**
  * Create a new post - POST /post
@@ -41,6 +42,7 @@ const getPosts = async (req: Request, res: Response) => {
     const totalPages = Math.ceil(totalPosts / limit);
 
     const posts: IPost[] = await Post.find(filter)
+      .populate("user_id")
       .sort({ _id: -1 })
       .skip((page - 1) * limit)
       .limit(limit);
@@ -50,6 +52,29 @@ const getPosts = async (req: Request, res: Response) => {
       currentPage: page,
       totalPages,
     });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+/**
+ * Get all posts - GET /post/suggestion
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ */
+const getPostSuggestion = async (req: Request, res: Response) => {
+  try {
+    const prompt =
+      "generate a title and content in hebrew to a post in social media website. give interesting and unique subjects. provide the response strictly in JSON format with title and content fields, do not include any additional text outisde the JSON.";
+    const suggestion = await geminiModel.generateContent(prompt);
+    const suggestionJson = JSON.parse(
+      suggestion.response
+        .text()
+        .replace(/^```json\n/, "")
+        .replace(/\n```$/, "")
+    );
+
+    res.status(200).json(suggestionJson);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -158,4 +183,5 @@ export const PostController = {
   deletePost,
   likePost,
   unlikePost,
+  getPostSuggestion,
 };

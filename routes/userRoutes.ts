@@ -32,7 +32,10 @@ const router = express.Router();
  *           description: The lastName of the user
  *         userName:
  *           type: string
- *           description: The userName of the user   
+ *           description: The userName of the user  
+ *         image:
+ *           type: string
+ *           description: The image of the user 
  *       example:
  *         _id: 67474a3d2651e79673ab702f
  *         firstName: ido

@@ -4,13 +4,13 @@ export interface IUserInfo {
   firstName: string;
   lastName: string;
   userName: string;
+  image: string;
 }
 
 export interface IUser extends IUserInfo {
   email: string;
   password: string;
   refreshTokens?: string[];
-  image: string;
 }
 
 const userSchema = new mongoose.Schema({
